@@ -19,14 +19,14 @@ from django.urls import path
 from formularioRamos import views as ramos_views
 from formularioProfesor import views as profesor_views
 from formularioAlumno import views as alumno_views
-from formularioAlumno.views import AlumnoListaView, AlumnoDetalleView
+from formularioAlumno.views import AlumnoListaView, AlumnoDetalleView, AlumnoLista, AlumnoDetail
 from formularioProfesor.views import ProfesorListaView, ProfesorDetalleView
 from formularioRamos.views import RamosListaView, RamosDetalleView
 
 
 urlpatterns = [
-    path('alumnos/', AlumnoListaView.as_view(), name='alumno-lista'),
-    path('alumnos/<int:pk>', AlumnoDetalleView.as_view(), name='alumno-detalle'),
+    path('alumnos/', AlumnoLista.as_view(), name='alumno-lista'),
+    path('alumnos/<int:pk>', AlumnoDetail.as_view(), name='alumno-detalle'),
 
     path('profesores/', ProfesorListaView.as_view(), name='alumno-lista'),
     path('profesores/<int:pk>', ProfesorDetalleView.as_view()),

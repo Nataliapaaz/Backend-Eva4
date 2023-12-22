@@ -84,7 +84,7 @@ WSGI_APPLICATION = 'proyectoEva2.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'formulario_ramos',
+        'NAME': 'Backend-eva4',
         'USER': 'root',
         'HOST': 'localhost',  
         'PORT': '3306',  
