@@ -7,46 +7,31 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from django.http import Http404
+from rest_framework import generics, mixins
 
 # Create your views here.
-class ProfesorLista(APIView):
+class ProfesorLista(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+    queryset = Profesor.objects.all()
+    serializer_class = ProfesorSerializer
 
     def get(self, request):
-        profesores = Profesor.objects.all()
-        serializer = ProfesorSerializer(profesores, many=True)
-        return Response(serializer.data)
+        return self.list(request)
     
     def post(self, request):
-        serializer = ProfesorSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return self.create(request)
         
-class ProfesorDetail(APIView):
-    def get_object(self, pk):
-        try:
-            return Profesor.objects.get(pk=pk)
-        except Profesor.DoesNotExist:
-            raise Http404
-        
+class ProfesorDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, generics.GenericAPIView):
+    queryset = Profesor.objects.all()
+    serializer_class = ProfesorSerializer
+
     def get(self, request, pk):
-        profesor = self.get_object(pk)
-        serializer = ProfesorSerializer(profesor)
-        return Response(serializer.data)
+        return self.retrieve(request, pk)
     
     def put(self, request, pk):
-        profesor = self.get_object(pk)
-        serializer = ProfesorSerializer(profesor, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+        return self.update(request, pk)
+
     def delete(self, request, pk):
-        profesor = self.get_object(pk)
-        profesor.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return self.destroy(request, pk)
 
 
 # _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_

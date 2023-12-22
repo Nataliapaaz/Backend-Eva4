@@ -21,7 +21,7 @@ from formularioProfesor import views as profesor_views
 from formularioAlumno import views as alumno_views
 from formularioAlumno.views import AlumnoListaView, AlumnoDetalleView, AlumnoLista, AlumnoDetail
 from formularioProfesor.views import ProfesorListaView, ProfesorDetalleView, ProfesorLista, ProfesorDetail
-from formularioRamos.views import RamosListaView, RamosDetalleView
+from formularioRamos.views import RamosListaView, RamosDetalleView, RamoLista, RamoDetail 
 
 
 urlpatterns = [
@@ -31,8 +31,8 @@ urlpatterns = [
     path('profesores/', ProfesorLista.as_view(), name='alumno-lista'),
     path('profesores/<int:pk>', ProfesorDetail.as_view()),
 
-    path('ramos/', RamosListaView.as_view(), name='ramos-lista'),
-    path('ramos/<int:pk>/', RamosDetalleView.as_view(), name='ramos-detalle'),
+    path('ramos/', RamoLista.as_view(), name='ramos-lista'),
+    path('ramos/<int:pk>/', RamoDetail.as_view(), name='ramos-detalle'),
 
     # _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
 

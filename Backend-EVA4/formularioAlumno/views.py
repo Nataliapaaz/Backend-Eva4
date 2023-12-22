@@ -8,85 +8,33 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from django.http import Http404
+from rest_framework import generics, mixins
 
 # Create your views here.
-class AlumnoLista(APIView):
+class AlumnoLista(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+    queryset = Alumno.objects.all()
+    serializer_class = AlumnoSerializer
 
     def get(self, request):
-        alumnos = Alumno.objects.all()
-        serializer = AlumnoSerializer(alumnos, many=True)
-        return Response(serializer.data)
+        return self.list(request)
     
     def post(self, request):
-        serializer = AlumnoSerializer(data = request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
+        return self.create(request)
         
-class AlumnoDetail(APIView):
-    def get_object(self, pk):
-        try:
-            return AlumnoDetail.objects.get(pk=pk)
-        except AlumnoDetail.DoesNotExist:
-            return Http404
-        
+class AlumnoDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, generics.GenericAPIView):
+    queryset = Alumno.objects.all()
+    serializer_class = AlumnoSerializer
+
     def get(self, request, pk):
-        alumno = self.get_object(pk)
-        serializer = AlumnoSerializer(alumno)
-        return Response(serializer.data)
+        return self.retrieve(request, pk)
     
     def put(self, request, pk):
-        alumno = self.get_object(pk)
-        serializer = AlumnoSerializer(alumno, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+        return self.update(request, pk)
+
     def delete(self, request, pk):
-        alumno = self.get_object(pk)
-        alumno.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return self.destroy(request, pk)
 
-"""
-@api_view(['GET', 'POST'])
-def alumno_lista(request):
-    if request.method == 'GET':
-        alumnos = Alumno.objects.all()
-        serializer = AlumnoSerializer(alumnos, many=True)
-        return Response(serializer.data)
-    
-    if request.method == 'POST':
-        serializer = AlumnoSerializer(data = request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-@api_view(['GET', 'PUT', 'DELETE'])
-def alumno_detail(request, pk):
-    try:
-        alumnos = Alumno.objects.get(pk=pk)
-    except Alumno.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-    
-    if request.method == 'GET':
-        serializer = AlumnoSerializer(alumnos)
-        return Response(serializer.data)
-    
-    if request.method == 'PUT':
-        serializer = AlumnoSerializer(alumnos, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-    if request.method == 'DELETE':
-        alumnos.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
 
-"""
 
 # _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-____________
 def home(request):
